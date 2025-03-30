@@ -53,10 +53,10 @@ public class JoinGamePanel : MonoBehaviour
     {
         availableGames.Clear();
         // Comment out these lines to test the "No games" message
-        //availableGames.Add(new GameInfo { Name = "Game 1", CurrentPlayers = 2, MaxPlayers = 6, HasStarted = false });
-        //availableGames.Add(new GameInfo { Name = "Game 2", CurrentPlayers = 3, MaxPlayers = 4, HasStarted = false });
-        //availableGames.Add(new GameInfo { Name = "Game 3", CurrentPlayers = 1, MaxPlayers = 8, HasStarted = false });
-        //availableGames.Add(new GameInfo { Name = "Test Game", CurrentPlayers = 4, MaxPlayers = 6, HasStarted = false });
+        availableGames.Add(new GameInfo { Name = "Game 1", CurrentPlayers = 2, MaxPlayers = 6, HasStarted = false });
+        availableGames.Add(new GameInfo { Name = "Game 2", CurrentPlayers = 3, MaxPlayers = 4, HasStarted = false });
+        availableGames.Add(new GameInfo { Name = "Game 3", CurrentPlayers = 1, MaxPlayers = 8, HasStarted = false });
+        availableGames.Add(new GameInfo { Name = "Test Game", CurrentPlayers = 4, MaxPlayers = 6, HasStarted = false });
     }
 
     private void OnSearchClicked()
