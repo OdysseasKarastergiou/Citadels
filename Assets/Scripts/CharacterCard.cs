@@ -117,7 +117,7 @@ public class CharacterCard : Card
 
     public void DiscardAndDraw()
     {
-        if (Role == CharacterRole.Magician)
+        if (Role == CharacterRole.King)
         {
             // Implementation will be added later
         }
