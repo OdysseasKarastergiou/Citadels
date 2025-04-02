@@ -1,4 +1,4 @@
- using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ public class RulesPanel : MonoBehaviour
     [SerializeField] private Button nextButton;
     
     private int currentPage = 0;
-    private readonly List<string> rulesPages = new List<string>
+    private static readonly string[] rulesPages = new[]
     {
         // Page 1: Introduction
         "Welcome to Citadels!\n\n" +
@@ -89,19 +89,9 @@ public class RulesPanel : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (rulesText != null)
+        if (rulesText != null && currentPage >= 0 && currentPage < rulesPages.Length)
         {
             rulesText.text = rulesPages[currentPage];
-        }
-
-        // Update navigation buttons
-        if (previousButton != null)
-        {
-            previousButton.interactable = currentPage > 0;
-        }
-        if (nextButton != null)
-        {
-            nextButton.interactable = currentPage < rulesPages.Count - 1;
         }
     }
 
@@ -116,14 +106,14 @@ public class RulesPanel : MonoBehaviour
 
     private void OnNextClicked()
     {
-        if (currentPage < rulesPages.Count - 1)
+        if (currentPage < rulesPages.Length - 1)
         {
             currentPage++;
             UpdateUI();
         }
     }
 
-    public void OnCancelClicked()
+    public void OnReturnClicked()
     {
         if (mainMenuPanel != null)
         {

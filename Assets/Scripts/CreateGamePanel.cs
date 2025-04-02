@@ -17,29 +17,27 @@ public class CreateGamePanel : MonoBehaviour
     [SerializeField] private Button createServerButton;
     [SerializeField] private Button cancelButton;
 
+    private static readonly string[] playerOptions = new string[7];
+    private static readonly string[] timerOptions = new[] { "30 sec", "1 min", "infinite" };
+
     private void Start()
     {
-        // Setup players dropdown
         if (playersDropdown != null)
         {
-            List<string> playerOptions = new List<string>();
-            for (int i = 2; i <= 8; i++)
+            for (int i = 0; i < 7; i++)
             {
-                playerOptions.Add(i.ToString());
+                playerOptions[i] = (i + 2).ToString();
             }
             playersDropdown.ClearOptions();
-            playersDropdown.AddOptions(playerOptions);
+            playersDropdown.AddOptions(new List<string>(playerOptions));
         }
 
-        // Setup round timer dropdown
         if (roundTimerDropdown != null)
         {
-            List<string> timerOptions = new List<string> { "30 sec", "1 min", "infinite" };
             roundTimerDropdown.ClearOptions();
-            roundTimerDropdown.AddOptions(timerOptions);
+            roundTimerDropdown.AddOptions(new List<string>(timerOptions));
         }
 
-        // Add button listeners
         if (createServerButton != null)
         {
             createServerButton.onClick.AddListener(OnCreateServerClicked);
@@ -52,14 +50,16 @@ public class CreateGamePanel : MonoBehaviour
 
     private void OnCreateServerClicked()
     {
-        if (gameNameInput != null && playersDropdown != null && roundTimerDropdown != null)
+        if (gameNameInput == null || playersDropdown == null || GameNetworkManager.Instance == null) return;
+
+        string gameName = gameNameInput.text;
+        if (string.IsNullOrEmpty(gameName))
         {
-            string gameName = gameNameInput.text;
-            int playerCount = int.Parse(playersDropdown.options[playersDropdown.value].text);
-            string roundTimer = roundTimerDropdown.options[roundTimerDropdown.value].text;
-            
-            Debug.Log($"Creating server with settings: Name={gameName}, Players={playerCount}, Timer={roundTimer}");
+            gameName = "Game " + Random.Range(1000, 9999);
         }
+
+        int maxPlayers = playersDropdown.value + 2;
+        GameNetworkManager.Instance.HostGame(gameName, maxPlayers);
     }
 
     private void OnCancelClicked()

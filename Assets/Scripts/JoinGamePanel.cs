@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class JoinGamePanel : MonoBehaviour
 {
+    public static JoinGamePanel Instance { get; private set; }
+
     [Header("UI References")]
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private TMP_InputField searchInput;
@@ -19,14 +21,21 @@ public class JoinGamePanel : MonoBehaviour
     [SerializeField] private Button returnButton;
     [SerializeField] private Button refreshButton;
     [SerializeField] private Button joinButton;
-    
-    // Temporary list of games for testing
-    private List<GameInfo> availableGames = new List<GameInfo>();
-    private GameInfo selectedGame;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
-        // Add button listeners
         if (searchButton != null)
         {
             searchButton.onClick.AddListener(OnSearchClicked);
@@ -42,67 +51,69 @@ public class JoinGamePanel : MonoBehaviour
         if (joinButton != null)
         {
             joinButton.onClick.AddListener(OnJoinClicked);
-            joinButton.interactable = false; // Disable join button until a game is selected
+            joinButton.interactable = false;
         }
 
-        // Add some test games
-        AddTestGames();
+        UpdateGameList();
     }
 
-    private void AddTestGames()
+    public void UpdateGameList(string searchTerm = "")
     {
-        availableGames.Clear();
-        // Comment out these lines to test the "No games" message
-        availableGames.Add(new GameInfo { Name = "Game 1", CurrentPlayers = 2, MaxPlayers = 6, HasStarted = false });
-        availableGames.Add(new GameInfo { Name = "Game 2", CurrentPlayers = 3, MaxPlayers = 4, HasStarted = false });
-        availableGames.Add(new GameInfo { Name = "Game 3", CurrentPlayers = 1, MaxPlayers = 8, HasStarted = false });
-        availableGames.Add(new GameInfo { Name = "Test Game", CurrentPlayers = 4, MaxPlayers = 6, HasStarted = false });
-    }
+        if (gameListContent == null) return;
 
-    private void OnSearchClicked()
-    {
-        string searchTerm = searchInput.text.ToLower();
-        UpdateGameList(searchTerm);
-    }
-
-    private void UpdateGameList(string searchTerm = "")
-    {
-        // Clear existing list
         foreach (Transform child in gameListContent)
         {
-            Destroy(child.gameObject);
+            if (child.gameObject != noGamesMessage)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
-        // Show/hide no games message
+        var availableGames = GameNetworkManager.Instance.GetAvailableGames();
+
         if (noGamesMessage != null)
         {
             noGamesMessage.SetActive(availableGames.Count == 0);
         }
 
-        // Filter and display games
-        foreach (var game in availableGames)
+        if (string.IsNullOrEmpty(searchTerm))
         {
-            if (string.IsNullOrEmpty(searchTerm) || 
-                game.Name.ToLower().Contains(searchTerm))
+            foreach (var game in availableGames)
             {
                 CreateGameListItem(game);
+            }
+        }
+        else
+        {
+            searchTerm = searchTerm.ToLower();
+            foreach (var game in availableGames)
+            {
+                if (game.Name.ToLower().Contains(searchTerm))
+                {
+                    CreateGameListItem(game);
+                }
             }
         }
     }
 
     private void CreateGameListItem(GameInfo game)
     {
+        if (gameListItemPrefab == null || gameListContent == null) return;
+
         GameObject item = Instantiate(gameListItemPrefab, gameListContent);
         
-        // Set game name
-        var nameText = item.transform.Find("GameNameText").GetComponent<TextMeshProUGUI>();
-        nameText.text = game.Name;
+        var nameText = item.transform.Find("GameNameText")?.GetComponent<TextMeshProUGUI>();
+        if (nameText != null)
+        {
+            nameText.text = game.Name;
+        }
         
-        // Set players count
-        var playersText = item.transform.Find("PlayersText").GetComponent<TextMeshProUGUI>();
-        playersText.text = $"{game.CurrentPlayers}/{game.MaxPlayers}";
+        var playersText = item.transform.Find("PlayersText")?.GetComponent<TextMeshProUGUI>();
+        if (playersText != null)
+        {
+            playersText.text = $"{game.CurrentPlayers}/{game.MaxPlayers}";
+        }
         
-        // Add click handler
         var button = item.GetComponent<Button>();
         if (button != null)
         {
@@ -112,46 +123,44 @@ public class JoinGamePanel : MonoBehaviour
 
     private void OnGameSelected(GameInfo game)
     {
-        selectedGame = game;
-        
-        // Update join button interactability
         if (joinButton != null)
         {
-            bool canJoin = CanJoinGame(game);
-            joinButton.interactable = canJoin;
+            joinButton.interactable = CanJoinGame(game);
         }
     }
 
     private bool CanJoinGame(GameInfo game)
     {
-        if (game == null) return false;
-        
-        // Check if game exists
-        if (!availableGames.Contains(game)) return false;
-        
-        // Check if game is full
-        if (game.CurrentPlayers >= game.MaxPlayers) return false;
-        
-        // Check if game has started
-        if (game.HasStarted) return false;
-        
-        return true;
+        return game != null && game.CurrentPlayers < game.MaxPlayers && !game.HasStarted;
     }
 
     private void OnJoinClicked()
     {
-        if (selectedGame != null && CanJoinGame(selectedGame))
+        var selectedItem = gameListContent.GetComponentInChildren<Button>();
+        if (selectedItem != null)
         {
-            // TODO: Implement actual game joining functionality
-            Debug.Log($"Joining game: {selectedGame.Name}");
+            var gameInfo = selectedItem.GetComponent<GameInfo>();
+            if (gameInfo != null && CanJoinGame(gameInfo))
+            {
+                GameNetworkManager.Instance.JoinGame(gameInfo.HostId);
+            }
+        }
+    }
+
+    private void OnSearchClicked()
+    {
+        if (searchInput != null)
+        {
+            UpdateGameList(searchInput.text);
         }
     }
 
     private void OnRefreshClicked()
     {
-        // TODO: Implement actual server refresh
-        AddTestGames(); // For now, just refresh the test games
-        UpdateGameList(searchInput.text);
+        if (searchInput != null)
+        {
+            UpdateGameList(searchInput.text);
+        }
     }
 
     private void OnReturnClicked()
@@ -162,13 +171,4 @@ public class JoinGamePanel : MonoBehaviour
             mainMenuPanel.SetActive(true);
         }
     }
-}
-
-// Class to hold game information
-public class GameInfo
-{
-    public string Name { get; set; }
-    public int CurrentPlayers { get; set; }
-    public int MaxPlayers { get; set; }
-    public bool HasStarted { get; set; }
 } 

@@ -68,7 +68,7 @@ public class SettingsPanel : MonoBehaviour
 
         for (int i = 0; i < filteredResolutions.Count; i++)
         {
-            string option = $"{filteredResolutions[i].width}x{filteredResolutions[i].height}";
+            string option = $"{filteredResolutions[i].width}x{filteredResolutions[i].height} @ {filteredResolutions[i].refreshRateRatio.numerator}/{filteredResolutions[i].refreshRateRatio.denominator} Hz";
             options.Add(option);
 
             if (filteredResolutions[i].width == Screen.width && 
