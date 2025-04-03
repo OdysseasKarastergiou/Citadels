@@ -5,12 +5,6 @@ public class CharacterInfoPanel : MonoBehaviour
 {
     [SerializeField] private Button closeButton;
 
-    private void Awake()
-    {
-        // Hide panel initially
-        gameObject.SetActive(false);
-    }
-
     private void Start()
     {
         // Set up close button
