@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class CreateGamePanel : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class CreateGamePanel : MonoBehaviour
     [SerializeField] private Button createButton;
     [SerializeField] private Button cancelButton;
     [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private GameObject lobbyPanel;
 
     private void Start()
     {
@@ -60,14 +60,18 @@ public class CreateGamePanel : MonoBehaviour
             // Get selected round timer
             float roundTimer = GetRoundTimerFromDropdown();
 
-            // Store game settings in PlayerPrefs or a static class for the game scene to access
+            // Store game settings in PlayerPrefs
             PlayerPrefs.SetString("GameName", gameNameInput.text);
             PlayerPrefs.SetInt("NumPlayers", numPlayers);
             PlayerPrefs.SetFloat("RoundTimer", roundTimer);
             PlayerPrefs.Save();
 
-            // Load the game scene
-            SceneManager.LoadScene("GameScene");
+            // Show lobby panel and hide this panel
+            gameObject.SetActive(false);
+            if (lobbyPanel != null)
+            {
+                lobbyPanel.SetActive(true);
+            }
         }
     }
 
