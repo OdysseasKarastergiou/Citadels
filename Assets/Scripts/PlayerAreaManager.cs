@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unity.Netcode;
 
 public class PlayerAreaManager : MonoBehaviour
 {
@@ -7,36 +6,27 @@ public class PlayerAreaManager : MonoBehaviour
     [SerializeField] private GameObject playerArea;
 
     [Header("Enemy Areas")]
-    [SerializeField] private GameObject[] enemyAreas; // Array of enemy area GameObjects
+    [SerializeField] private GameObject[] enemyAreas;
 
     private void Start()
     {
-        if (GameNetworkManager.Instance != null)
+        // Get the number of players from PlayerPrefs
+        int numPlayers = PlayerPrefs.GetInt("NumPlayers", 2);
+        
+        // Show the player area
+        if (playerArea != null)
         {
-            GameNetworkManager.Instance.OnGameInfoUpdated += UpdatePlayerAreas;
-            UpdatePlayerAreas();
+            playerArea.SetActive(true);
         }
-    }
 
-    private void OnDestroy()
-    {
-        if (GameNetworkManager.Instance != null)
-        {
-            GameNetworkManager.Instance.OnGameInfoUpdated -= UpdatePlayerAreas;
-        }
-    }
-
-    private void UpdatePlayerAreas()
-    {
-        var gameInfo = GameNetworkManager.Instance.GetGameInfo(NetworkManager.Singleton.LocalClientId);
-        if (gameInfo == null) return;
-
-        // Show/hide enemy areas based on number of players
-        int totalPlayers = gameInfo.CurrentPlayers;
+        // Show enemy areas based on number of players
+        // We show (numPlayers - 1) enemy areas because one is the local player
         for (int i = 0; i < enemyAreas.Length; i++)
         {
-            bool shouldShow = i < totalPlayers - 1; // -1 because we don't count the local player
-            enemyAreas[i].SetActive(shouldShow);
+            if (enemyAreas[i] != null)
+            {
+                enemyAreas[i].SetActive(i < numPlayers - 1);
+            }
         }
     }
 } 

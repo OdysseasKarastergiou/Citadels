@@ -10,6 +10,8 @@ public class RulesPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rulesText;
     [SerializeField] private Button previousButton;
     [SerializeField] private Button nextButton;
+    [Header("Navigation")]
+    [SerializeField] private Button cancelButton;
     
     private int currentPage = 0;
     private static readonly string[] rulesPages = new[]
@@ -83,6 +85,10 @@ public class RulesPanel : MonoBehaviour
         {
             nextButton.onClick.AddListener(OnNextClicked);
         }
+        if (cancelButton != null)
+        {
+            cancelButton.onClick.AddListener(OnCancelClicked);
+        }
 
         UpdateUI();
     }
@@ -113,11 +119,11 @@ public class RulesPanel : MonoBehaviour
         }
     }
 
-    public void OnReturnClicked()
+    private void OnCancelClicked()
     {
+        gameObject.SetActive(false);
         if (mainMenuPanel != null)
         {
-            gameObject.SetActive(false);
             mainMenuPanel.SetActive(true);
         }
     }

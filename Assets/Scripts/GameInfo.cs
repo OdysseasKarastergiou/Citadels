@@ -1,10 +1,10 @@
-using Unity.Netcode;
+using UnityEngine;
 
+[System.Serializable]
 public class GameInfo
 {
-    public string Name { get; set; }
-    public int CurrentPlayers { get; set; }
-    public int MaxPlayers { get; set; }
-    public bool HasStarted { get; set; }
-    public ulong HostId { get; set; }
+    public string Name;
+    public int CurrentPlayers;
+    public int MaxPlayers;
+    public bool HasStarted;
 } 

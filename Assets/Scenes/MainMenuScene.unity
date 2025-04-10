@@ -4164,7 +4164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 802d49704e2af5d4dbab9a0682b3ea56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuPanel: {fileID: 1755964518}
   searchInput: {fileID: 48593762}
   searchButton: {fileID: 470327674}
   gameListContent: {fileID: 1579768426}
@@ -4173,6 +4172,7 @@ MonoBehaviour:
   returnButton: {fileID: 1527888327}
   refreshButton: {fileID: 1112147169}
   joinButton: {fileID: 116993563}
+  mainMenuPanel: {fileID: 1755964518}
 --- !u!114 &642453908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5701,12 +5701,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7ede3fa0add6f4e9a30b131d205018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuPanel: {fileID: 1755964518}
   gameNameInput: {fileID: 1783749164}
   playersDropdown: {fileID: 882606055}
   roundTimerDropdown: {fileID: 2041029412}
-  createServerButton: {fileID: 1523328498}
+  createButton: {fileID: 1523328498}
   cancelButton: {fileID: 813197499}
+  mainMenuPanel: {fileID: 1755964518}
 --- !u!1 &1051122939
 GameObject:
   m_ObjectHideFlags: 0
@@ -6075,123 +6075,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1095501337
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1095501338}
-  - component: {fileID: 1095501341}
-  - component: {fileID: 1095501340}
-  - component: {fileID: 1095501339}
-  m_Layer: 0
-  m_Name: NetworkManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1095501338
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1095501337}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 538.06354, y: 251.15843, z: -2.4295564}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1095501339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1095501337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bdd641893f8bc543b7db555ec31649f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1095501340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1095501337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ProtocolType: 0
-  m_UseWebSockets: 0
-  m_UseEncryption: 0
-  m_MaxPacketQueueSize: 128
-  m_MaxPayloadSize: 6144
-  m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
-  m_MaxConnectAttempts: 60
-  m_DisconnectTimeoutMS: 30000
-  ConnectionData:
-    Address: 127.0.0.1
-    Port: 7777
-    ServerListenAddress: 127.0.0.1
-  DebugSimulator:
-    PacketDelayMS: 0
-    PacketJitterMS: 0
-    PacketDropRate: 0
---- !u!114 &1095501341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1095501337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NetworkManagerExpanded: 0
-  NetworkConfig:
-    ProtocolVersion: 0
-    NetworkTransport: {fileID: 1095501340}
-    PlayerPrefab: {fileID: 0}
-    Prefabs:
-      NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 282837a2fce07994ab989389a60112ab, type: 2}
-    TickRate: 30
-    ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
-    ConnectionData: 
-    EnableTimeResync: 0
-    TimeResyncInterval: 30
-    EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 1
-    ForceSamePrefabs: 1
-    RecycleNetworkIds: 1
-    NetworkIdRecycleDelay: 120
-    RpcHashSize: 0
-    LoadSceneTimeOut: 120
-    SpawnTimeout: 10
-    EnableNetworkLogs: 1
-    NetworkTopology: 0
-    UseCMBService: 0
-    AutoSpawnPlayerPrefabClientSide: 1
-    NetworkProfilingMetrics: 1
-    OldPrefabList: []
-  RunInBackground: 1
-  LogLevel: 1
 --- !u!1 &1101447869
 GameObject:
   m_ObjectHideFlags: 0
@@ -7321,9 +7204,9 @@ RectTransform:
   - {fileID: 737729519}
   - {fileID: 1755964519}
   - {fileID: 1049564581}
+  - {fileID: 642453906}
   - {fileID: 1601126410}
   - {fileID: 2135987277}
-  - {fileID: 642453906}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9175,7 +9058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00000032321108}
+  m_AnchoredPosition: {x: 0, y: 0.00033126783}
   m_SizeDelta: {x: 0, y: 245.68}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1579768427
@@ -11651,7 +11534,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 569808218}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999426
+  m_Size: 0.9998035
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12841,6 +12724,7 @@ MonoBehaviour:
   rulesText: {fileID: 143924427}
   previousButton: {fileID: 1381275233}
   nextButton: {fileID: 1105602728}
+  cancelButton: {fileID: 1154147693}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -12848,4 +12732,3 @@ SceneRoots:
   - {fileID: 1615073199}
   - {fileID: 274915297}
   - {fileID: 1211873173}
-  - {fileID: 1095501338}

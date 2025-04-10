@@ -1,72 +1,94 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class CreateGamePanel : MonoBehaviour
 {
-    [Header("UI References")]
-    [SerializeField] private GameObject mainMenuPanel;
-    
-    [Header("Game Settings Fields")]
+    [Header("UI Elements")]
     [SerializeField] private TMP_InputField gameNameInput;
     [SerializeField] private TMP_Dropdown playersDropdown;
     [SerializeField] private TMP_Dropdown roundTimerDropdown;
-    
-    [Header("Buttons")]
-    [SerializeField] private Button createServerButton;
+    [SerializeField] private Button createButton;
     [SerializeField] private Button cancelButton;
-
-    private static readonly string[] playerOptions = new string[7];
-    private static readonly string[] timerOptions = new[] { "30 sec", "1 min", "infinite" };
+    [SerializeField] private GameObject mainMenuPanel;
 
     private void Start()
     {
+        // Set up players dropdown (2-8 players)
         if (playersDropdown != null)
         {
-            for (int i = 0; i < 7; i++)
-            {
-                playerOptions[i] = (i + 2).ToString();
-            }
             playersDropdown.ClearOptions();
-            playersDropdown.AddOptions(new List<string>(playerOptions));
+            for (int i = 2; i <= 8; i++)
+            {
+                playersDropdown.options.Add(new TMP_Dropdown.OptionData($"{i} Players"));
+            }
+            playersDropdown.value = 0; // Default to 2 players
+            playersDropdown.RefreshShownValue();
         }
 
+        // Set up round timer dropdown
         if (roundTimerDropdown != null)
         {
             roundTimerDropdown.ClearOptions();
-            roundTimerDropdown.AddOptions(new List<string>(timerOptions));
+            roundTimerDropdown.options.Add(new TMP_Dropdown.OptionData("30 Seconds"));
+            roundTimerDropdown.options.Add(new TMP_Dropdown.OptionData("1 Minute"));
+            roundTimerDropdown.options.Add(new TMP_Dropdown.OptionData("Unlimited"));
+            roundTimerDropdown.value = 0; // Default to 30 seconds
+            roundTimerDropdown.RefreshShownValue();
         }
 
-        if (createServerButton != null)
+        // Set up button listeners
+        if (createButton != null)
         {
-            createServerButton.onClick.AddListener(OnCreateServerClicked);
+            createButton.onClick.AddListener(OnCreateClicked);
         }
+
         if (cancelButton != null)
         {
             cancelButton.onClick.AddListener(OnCancelClicked);
         }
     }
 
-    private void OnCreateServerClicked()
+    private void OnCreateClicked()
     {
-        if (gameNameInput == null || playersDropdown == null || GameNetworkManager.Instance == null) return;
-
-        string gameName = gameNameInput.text;
-        if (string.IsNullOrEmpty(gameName))
+        if (gameNameInput != null && !string.IsNullOrEmpty(gameNameInput.text))
         {
-            gameName = "Game " + Random.Range(1000, 9999);
-        }
+            // Get selected number of players (2-8)
+            int numPlayers = playersDropdown.value + 2;
+            
+            // Get selected round timer
+            float roundTimer = GetRoundTimerFromDropdown();
 
-        int maxPlayers = playersDropdown.value + 2;
-        GameNetworkManager.Instance.HostGame(gameName, maxPlayers);
+            // Store game settings in PlayerPrefs or a static class for the game scene to access
+            PlayerPrefs.SetString("GameName", gameNameInput.text);
+            PlayerPrefs.SetInt("NumPlayers", numPlayers);
+            PlayerPrefs.SetFloat("RoundTimer", roundTimer);
+            PlayerPrefs.Save();
+
+            // Load the game scene
+            SceneManager.LoadScene("GameScene");
+        }
+    }
+
+    private float GetRoundTimerFromDropdown()
+    {
+        if (roundTimerDropdown == null) return 30f; // Default to 30 seconds
+
+        switch (roundTimerDropdown.value)
+        {
+            case 0: return 30f;    // 30 seconds
+            case 1: return 60f;    // 1 minute
+            case 2: return -1f;    // Unlimited (negative value indicates unlimited)
+            default: return 30f;   // Default to 30 seconds
+        }
     }
 
     private void OnCancelClicked()
     {
+        gameObject.SetActive(false);
         if (mainMenuPanel != null)
         {
-            gameObject.SetActive(false);
             mainMenuPanel.SetActive(true);
         }
     }
